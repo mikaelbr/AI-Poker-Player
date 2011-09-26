@@ -553,11 +553,12 @@ class Player():
   def raise_action(self, highest_bet):
     self.raise_count += 1
     print("raise_limit: ", self._raise_limit, " highest_bet:", highest_bet, " sum_pot_in:", self.sum_pot_in)
+    print("raise_cound: ", self.raise_count)
     deducted = self._raise_limit + highest_bet - self.sum_pot_in
     self.sum_pot_in += deducted
     self.money -= deducted
     self.last_bet = deducted
-    print("Player", self.name, "raised  with", deducted-self._raise_limit)
+    print("Player", self.name, "raised  with", deducted-self._raise_limit if highest_bet > 0 else deducted)
     return [1, deducted]
 
   def bet_action(self, bet):
@@ -581,10 +582,10 @@ class Phase1(Player):
     
 
     if len(shared_cards) < 1: # pre-flop
+
       # check for pair, high cards, suited, high card suited. 
       if ranking[0] == 2 and ranking[1] > 9 and self.raise_count < 3:
         # raise
-        self.raise_count += 1
         return self.raise_action(highest_bet)
 
       elif ranking[0] == 1 and ranking[1] > 10 and ranking[2] > 10: # high card
@@ -604,9 +605,8 @@ class Phase1(Player):
         return self.fold_action()
 
     else: # post-flop
-      if (ranking[0] == 3 and ranking[1] > 10 and ranking[2] > 10) or (ranking[0] == 4 and ranking[1] > 7) or (ranking[0] > 4) and self.raise_count < 3:
+      if ((ranking[0] == 3 and ranking[1] > 10 and ranking[2] > 10) or (ranking[0] == 4 and ranking[1] > 7) or (ranking[0] > 4)) and self.raise_count < 3:
         # raise
-        self.raise_count += 1
         return self.raise_action(highest_bet)
 
       elif highest_bet != self.sum_pot_in and ((ranking[0] == 1) or (ranking[0] == 2 and ranking[1] < 12) ):
