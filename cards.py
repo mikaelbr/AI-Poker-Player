@@ -289,61 +289,95 @@ class poker():
     self.n_rounds = n_rounds
     self.show_data = n_games < 2 or force_log
     self.players = players
-    self.start_game()
     self.last_raise = 0
+
+    for i in range(n_games):
+      self.start_game()
 
 
   def start_game(self):
     self.deck = card_deck()
-    self.pot = 0
     
     # Main game loop/structure. Based on Texas Hold 'Em rules
     for i in range(self.n_rounds):
 
+      self.deck.reset()
+
       self.round = i
       self.log("---- Round #", self.round, "----")
 
-      # Suffle for big blind/small blind
+      # Shuffle for big blind/small blind
       if(i != 0):
-        self.players.append(self.active_players.pop(0))
-        self.players.append(self.active_players.pop(0))
+        self.players.append(self.players.pop(0))
 
       # Reset info.
+      self.pot = 0
       self.flop = []
       self.turn = []
       self.river = []
       self.shared_cards = []
-      self.active_players = self.players
+      self.active_players = self.players[:]
 
-      
-      
-      self.log("Small blind:", self.active_players[1].name)
-      self.log("Big blind:", self.active_players[2].name)
-
-      self.active_raise = 0
-
-      # Deal hole cards
+      # Deal hole cards 
       j = 0
       for p in self.active_players:
-        j += 1 
-        p.new_round((j==1), (j==2))
+        if p == None:
+          continue
+                
+        small_blind_player = j == len(self.players)-2
+        big_blind_player = j == len(self.players)-1
+        self.pot += p.new_round(small_blind_player, big_blind_player)
         p.set_cards(self.deck.deal_n_cards(2))
 
-      self.show_player_stats()
+        j += 1 
+
+      self.log("Pot:", self.pot)
+      self.show_player_stats()      
 
       
+      self.do_betting_round(False)
 
-      self.do_betting_round()
+      p = self.calculate_win()
+      if p:
+        self.log("Winner:")
+        p[0][0].print_info(self.shared_cards)
+        continue
+
+      self.log("----- FLOP ------")
       self.deal_flop()
       self.do_betting_round()
+      self.log("----- END FLOP ------")
+
+      p = self.calculate_win()
+      if p:
+        self.log("Winner:")
+        p[0][0].print_info(self.shared_cards)
+        continue
+
+      self.log("----- TURN ------")
       self.deal_turn()
       self.do_betting_round()
+      self.log("----- END TURN ------")
+
+      p = self.calculate_win()
+      if p:
+        self.log("Winner:")
+        p[0][0].print_info(self.shared_cards)
+        continue
+
+      self.log("----- RIVER ------")
       self.deal_river()
       self.do_betting_round()
-      self.calculate_win()
+      self.log("----- END RIVER ------")
+
+      p = self.calculate_win(True)
+      if p:
+        self.log("Winner(s) with hand ranking:", p[1])
+        for winner in p[0]:
+          winner.print_info(self.shared_cards)
+        continue
 
       # Serve a fresh deck
-      self.deck.reset()
       
 
 
@@ -373,23 +407,94 @@ class poker():
     self.show_shared_cards()
     self.show_player_stats()
 
-  def do_betting_round(self):
+  def do_betting_round(self, do_reset_bets = True):
+
+    self.log("Pot:", self.pot)
+
+    if self.calculate_win():
+      return
+
+    i = -1
+
     for p in self.active_players:
-      p.take_action(self.active_raise)
+
+      
+      
+      i += 1
+
+      if p == None:
+        continue
+
+      if do_reset_bets:
+        p.sum_pot_in = 0
+
+      highest_bet = 0 if self.active_players[-1] == None else self.active_players[-1].last_bet
+      if do_reset_bets:
+        highest_bet = 0
+      action = p.take_action(highest_bet, self.pot, self.active_players, i, self.shared_cards)
+
+      # Action returns a list [<0|1>, amount] 0 = Call, 1 = raise
+
+      if not(action): # Fold
+        self.active_players[i] = None
+      else:
+        self.pot += action[1]
+        if action[0] == 1:
+          self.active_players = self.active_players[(i+1):] + self.active_players[:(i+1)]
+          if i != len(self.active_players):
+            return self.do_betting_round(False)
+        
+      
     
+    
+  def count_active_players(self, player_list):
+    i = 0;
+    for p in player_list:
+      if p != None:
+        i += 1
+    return i
 
-
-  def calculate_win(self):
+  def calculate_win(self, is_last_round = False):
     # Winning calcs 
-    pass
+    if self.count_active_players(self.active_players) < 2:
+      for p in self.active_players:
+        if p != None:
+          p.win(self.pot)
+          return [[p], calc_cards_power(p.cards + self.shared_cards)]
+    
+    if is_last_round:
+      winner = [None, [0, 0, 0, 0, 0]]
+      for p in self.active_players:
+        if p == None:
+          continue
+        
+        ranking = calc_cards_power(p.cards + self.shared_cards)
+        if ranking[0] > winner[1][0]:
+          winner = [[p], ranking]
+        elif ranking[0] == winner[1][0]:
+          if ranking == winner[1]:
+            winner[0].append(p)
+          else:
+            for j in range(1, len(ranking)):
+              if ranking[j] > winner[1][j]:
+                winner = [[p], ranking]
+                break
+      
+      for p in winner[0]:
+        p.win(self.pot/len(winner[0]))
+
+      return winner
+    
+    return False
 
   def show_shared_cards(self):
     self.log("Shared cards:", card_names(self.shared_cards))
 
   def show_player_stats(self):
     self.log("------ Player stats -----")
-    for p in self.players:
-      p.print_info(self.shared_cards)
+    for p in self.active_players:
+      if p != None:
+        p.print_info(self.shared_cards)
     self.log("---- END Player stats ---")
 
   def log(self, *message, **argv):
@@ -410,6 +515,8 @@ class Player():
     self.name = name
     self.sum_pot_in = 0
     self.is_blind = False
+    self.last_bet = 0
+    self.raise_count = 1
 
   def set_cards(self, cards):
     self.cards = cards
@@ -421,29 +528,47 @@ class Player():
     self.sum_pot_in = 0
     self.is_blind = is_big or is_small
 
+
     if (is_big):
-      return self.call_action(self._raise_limit)
+      print("Big blind:", self.name)
+      return self.bet_action(self._raise_limit)
     elif (is_small):
-      return self.call_action(self._raise_limit/2)
+      print("Small blind:", self.name)
+      return self.bet_action(self._raise_limit/2)
+    else:
+      return 0
 
   def fold_action(self):
+    print("Player", self.name, "folded")
     self.sum_pot_in = 0
     return False
 
-  def call_action(self, last_opponent_raise):
-    deducted = last_opponent_raise
+  def call_action(self, highest_bet):
+    deducted = highest_bet - self.sum_pot_in
     self.sum_pot_in += deducted
     self.money -= deducted
-    return deducted
+    print("Player", self.name, "called" if deducted > 0 else "checked", "with", deducted)
+    return [0, deducted]
 
-  def raise_action(self, last_opponent_raise):
-    deducted = self._raise_limit + last_opponent_raise
+  def raise_action(self, highest_bet):
+    self.raise_count += 1
+    print("raise_limit: ", self._raise_limit, " highest_bet:", highest_bet, " sum_pot_in:", self.sum_pot_in)
+    deducted = self._raise_limit + highest_bet - self.sum_pot_in
     self.sum_pot_in += deducted
     self.money -= deducted
-    return deducted
+    self.last_bet = deducted
+    print("Player", self.name, "raised  with", deducted-self._raise_limit)
+    return [1, deducted]
+
+  def bet_action(self, bet):
+    self.sum_pot_in += bet
+    self.money -= bet
+    self.last_bet = bet
+    return bet
 
   def win(self, pot):
     self.money += pot
+    self.sum_pot_in = 0
 
   def print_info(self, shared_cards):
     print(self.name, " (", self.money, "credits):", card_names(self.cards), calc_cards_power(self.cards + shared_cards))
@@ -451,19 +576,60 @@ class Player():
 
 class Phase1(Player):
 
-  def take_action(self, last_opponent_raise):
-    if (self.is_blind):
-      print("Her")
+  def take_action(self, highest_bet, pot, players, position, shared_cards):
+    ranking = calc_cards_power(self.cards + shared_cards) # calculate hand ranking
+    
+
+    if len(shared_cards) < 1: # pre-flop
+      # check for pair, high cards, suited, high card suited. 
+      if ranking[0] == 2 and ranking[1] > 9 and self.raise_count < 3:
+        # raise
+        self.raise_count += 1
+        return self.raise_action(highest_bet)
+
+      elif ranking[0] == 1 and ranking[1] > 10 and ranking[2] > 10: # high card
+        # call
+        return self.call_action(highest_bet)
+
+      elif self.cards[0][1] == self.cards[1][1] and ranking[1] > 10 and ranking[2] > 10: # suited high
+        # call
+        return self.call_action(highest_bet)
+
+      elif self.sum_pot_in == highest_bet:
+        # check
+        return self.call_action(highest_bet)
+
+      else:
+        # fold
+        return self.fold_action()
+
+    else: # post-flop
+      if (ranking[0] == 3 and ranking[1] > 10 and ranking[2] > 10) or (ranking[0] == 4 and ranking[1] > 7) or (ranking[0] > 4) and self.raise_count < 3:
+        # raise
+        self.raise_count += 1
+        return self.raise_action(highest_bet)
+
+      elif highest_bet != self.sum_pot_in and ((ranking[0] == 1) or (ranking[0] == 2 and ranking[1] < 12) ):
+        # fold
+        return self.fold_action()
+
+      else:
+        # call/check
+        return self.call_action(highest_bet)
+
+
 
 
 
 players = [
   Phase1("Mikael", 1000), 
   Phase1("Marius", 1000),
-  Phase1("Martin", 1000)
+  Phase1("Martin", 1000),
+  Phase1("Jostein", 1000),
+  Phase1("Emil", 1000)
 ]
 
-p = poker(players, 10);
+p = poker(players, 20);
 
 
 
