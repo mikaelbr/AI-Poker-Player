@@ -43,7 +43,7 @@ def fetch_rollout_data(players, hole_cards):
 
 
 class Phase2(player.Player):
-  def take_action(self, highest_bet, pot, players, position, shared_cards):
+  def take_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises):
     if len(shared_cards) < 1: # pre-flop
       
       # Fetch information from stored data for rollout simulations.
@@ -55,24 +55,36 @@ class Phase2(player.Player):
       hand = hand_strength.HandStrength(players)
       strength = hand.calculate(self.cards, shared_cards)
 
+
     # We now have strength. Use this to take actions. 
 
     if not strength:
       strength = 0
 
     # Simple solutions for testing (don't take pre/post flop into account)
-
+    action = ""
     if strength > 0.7 and self.raise_count < 3: # raise
       if(self.sum_pot_in == highest_bet):
-        return self.call_action(highest_bet)
-      return self.raise_action(highest_bet)
+        # Check
+        action = "check"
+        ret = self.call_action(highest_bet)
+      else:
+        action = "raise"
+        ret = self.raise_action(highest_bet)
     elif strength > 0.3: # call
-      return self.call_action(highest_bet)
+      action = "call"
+      ret = self.call_action(highest_bet)
     else: #fold
       if self.sum_pot_in == highest_bet:
-        return self.call_action(highest_bet)
+        action = "check"
+        ret = self.call_action(highest_bet)
+      else:
+        return self.fold_action()
 
-      return self.fold_action()
+    if action != "":
+      self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, action)
+
+    return ret
 
 
 
@@ -102,5 +114,5 @@ players = [
   phase1.Phase1("Andre the giant", 1000, "tight_aggressive")
 ]
 
-p = poker.poker(players, 1000, force_log = True);
+p = poker.poker(players, 1000, debug_mode = True);
 

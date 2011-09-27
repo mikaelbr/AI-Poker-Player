@@ -87,8 +87,8 @@ class Phase1(player.Player):
         ret = self.call_action(highest_bet)
     
     if action != "":
-      self.take_action_super(self, highest_bet, pot, players, position, shared_cards, state, total_raises, action)
-      
+      self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, action)
+
     return ret
 
 
