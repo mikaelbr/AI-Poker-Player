@@ -41,6 +41,7 @@ class Player():
   def new_round(self, is_small = False, is_big = False):
     self.sum_pot_in = 0
     self.is_blind = is_big or is_small
+    self.raise_count = 0
 
     self.modeling = []
 

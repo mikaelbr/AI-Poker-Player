@@ -174,6 +174,8 @@ class poker():
           if i != len(self.active_players):
             return self.do_betting_round(False)
         
+      p.opponent_model_update_array(highest_bet, self.pot, self.count_active_players(self.active_players), i, self.shared_cards, self.state, self.total_raises, self.active_players)
+
     print("====== END BETTING ROUND ======")
     
     
