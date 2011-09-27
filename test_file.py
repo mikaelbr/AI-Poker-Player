@@ -1,11 +1,6 @@
 
-def isset(vard, v):
-	try:
-	    vard[v]
-	    return True
-	except KeyError:
-	    return False
 
-a = {}
+print (0.5432432432432%0.3)
 
-print(isset(a, "a"))
+
+

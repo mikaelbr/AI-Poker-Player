@@ -1,6 +1,4 @@
 import sqlite3
-import hashlib
-
 
 class DB_Con ():
 
@@ -22,10 +20,21 @@ class DB_Con ():
     # and the pot odds (C/(C+P))
     def generate_context(self, betting_round, players_remaining, num_raises, pot_odds):
 
+        # calculate pot_odds grouping. 
+        pot = 0
+        if(pot_odds <= 0.3):
+            pot = 1
+        elif pot_odds > 0.3 and pot_odds <= 0.5:
+            pot = 2
+        elif pot_odds > 0.5 and pot_odds <= 0.7:
+            pot = 3
+        else:
+            pot = 4
+
         # OK To just use md5 for this - not to many collisions.
         # Also a fast hashing - positive in this context. 
         #return hashlib.md5("%s:%s:%s:%s" % (betting_round, players_remaining, num_raises, pot_odds)).hexdigest()
-        return "%s:%s:%s:%s" % (betting_round, players_remaining, num_raises, pot_odds)
+        return "%s:%s:%s:%s" % (betting_round, players_remaining, num_raises, pot)
 
 
     # returns a float value
@@ -43,25 +52,24 @@ class DB_Con ():
         self.c.execute("SELECT * FROM opponent_modeling")
         return self.c.fetchall()
 
-
-
-    # in form of [[context, player, action, strength], [context, player, action, strength], ... ]
-    def insert_data(self, data):
+    # in form of [[context, action], [context, action], ... ] and player, strength
+    def insert_data(self, data, player, strength):
 
         for c in data:
-            prev_value = self.get_hand_strength(c[0],c[1],c[2])
+            # c1 = context, c2 = action. 
+
+            prev_value = self.get_hand_strength(c[0],player,c[2])
             if prev_value:
                 # update value
-                self.c.execute("UPDATE opponent_modeling SET strength = (strength+?)/2, num_raises = num_raises + 1", (c[3]))
+                self.c.execute("UPDATE opponent_modeling SET strength = (strength+?)/2, num_raises = num_raises + 1", (strength))
                 pass
             else: # Insert new
-                self.c.execute("INSERT INTO opponent_modeling VALUES (?, ?, ?, ?, ?)", (c[0],c[1],c[2],c[3],1))
+                self.c.execute("INSERT INTO opponent_modeling VALUES (?, ?, ?, ?, ?)", (c[0],player,c[1],strength,1))
 
         self.conn.commit()
 
 '''
 db = DB_Con()
-
 
 contexts = [
     [db.generate_context(1, 3, 1, float(30.0/(45.0+30.0))), "Mikael", "call", 0.8531],
@@ -78,3 +86,4 @@ print("Strength: %s" % db.get_hand_strength(db.generate_context(1, 3, 1, float(3
 
 print(db.get_dump())
 '''
+

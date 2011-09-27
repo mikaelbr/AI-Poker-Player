@@ -1,4 +1,10 @@
 import cards
+import db_con
+import hand_strength
+
+
+db = DB_Con()
+
 
 # Base class. 
 class Player():
@@ -22,6 +28,7 @@ class Player():
     self.total_showdown_loss = 0
     self.total_pre_showdown_win = 0
 
+
   def set_cards(self, cards):
     self.cards = cards
 
@@ -32,6 +39,7 @@ class Player():
     self.sum_pot_in = 0
     self.is_blind = is_big or is_small
 
+    self.modeling = []
 
     if (is_big):
       print("Big blind:", self.name, "puts", float(self._raise_limit), "in the pot")
@@ -105,6 +113,38 @@ class Player():
     self.total_showdown_win += 1
     self.money += pot
     self.sum_pot_in = 0
+
+  # Update model each time a player makes an action!
+  def update_modeling (self, betting_round, players_remaining, total_raises, pot_odds, action):
+
+    # returns a context based on what round, num players remaining, number of total raises in game
+    # and the pot odds (C/(C+P))
+    self.modeling.append([db.generate_context(betting_round, players_remaining, total_raises, pot_odds), action])
+
+  # Save modeling after showdown is presented. (all shared cards)
+  def save_modeling(self, num_players, shared_cards):
+    
+    hand = hand_strength.HandStrength(num_players)
+    strength = hand.calculate(self.cards, shared_cards)
+
+    # in form of [[context, action], [context, action], ... ] and player, strength
+    db.insert_data(self.modeling, self.name, strength)
+
+
+  def take_action_super(self, highest_bet, pot, players, position, shared_cards, state, total_raises, action):
+
+    # pot_odds = use highest_bet and pot
+    # players_remaining = players
+    # betting_round = state
+    # total_raises
+    pot_odds = (float(highest_bet)/(float(highest_bet)+float(pot)))
+    self.update_modeling(state, players, total_raises, pot_odds, action)
+
+
+
+
+
+
 
   def print_info(self, shared_cards):
     print(self.name, "- play style: "+self.play_style, "(", self.money, "credits):", cards.card_names(self.cards), cards.calc_cards_power(self.cards + shared_cards))
