@@ -72,7 +72,7 @@ class Phase1(player.Player):
           self.last_action = "check"
           ret = self.call_action(highest_bet)
         else:
-          ret = self.fold_action()
+          return self.fold_action()
     elif state >= 2:
       # Post-flop
       if(self.raise_count > 5):
@@ -89,9 +89,9 @@ class Phase1(player.Player):
           self.last_action = "check"
           ret = self.call_action(highest_bet)
         else:
-          ret = self.fold_action()        
+          return self.fold_action()        
     else:
-      ret = self.fold_action()
+      return self.fold_action()
     
     if self.last_action != "":
       self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, self.last_action)
@@ -182,12 +182,12 @@ players = [
   Phase1("Marius", 1000, "tight_passive"),
   Phase1("Martin", 1000, "loose_agressive"),
   Phase1("Jostein", 1000, "loose_passive"),
-  Phase1("Emil", 1000, "loose_passive"),
-  Phase1("Steinar", 1000, "loose_passive"),
-  Phase1("Stian", 1000, "loose_passive"),
-  Phase1("Selmer", 1000, "tight_passive"),
-  Phase1("Ole Jorgen", 1000, "tight_passive"),
-  Phase1("Andre the giant", 1000, "tight_aggressive")
+  Phase1("Emil", 1000, "loose_passive")
+  #Phase1("Steinar", 1000, "loose_passive"),
+  #Phase1("Stian", 1000, "loose_passive"),
+  #Phase1("Selmer", 1000, "tight_passive"),
+  #Phase1("Ole Jorgen", 1000, "tight_passive"),
+  #Phase1("Andre the giant", 1000, "tight_aggressive")
 ]
 
 #p = poker.poker(players, 250, debug_mode=False);
