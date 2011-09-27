@@ -53,7 +53,7 @@ class Phase1(player.Player):
         return self.call_action(highest_bet)
 
       elif self.sum_pot_in == highest_bet:
-        # check
+        # check, we use call for this purpose(calls 0)
         return self.call_action(highest_bet)
 
       else:
@@ -86,7 +86,7 @@ class Phase1(player.Player):
 
 '''
 players = [
-  Phase1("Mikael", 1000, "loose_aggressive"), 
+  Phase1("Mikael", 1000, "loose_aggressive"),
   Phase1("Marius", 1000, "loose_aggressive"),
   Phase1("Martin", 1000, "loose_aggressive"),
   Phase1("Jostein", 1000, "loose_passive"),
@@ -98,5 +98,15 @@ players = [
   Phase1("Andre the giant", 1000, "tight_aggressive")
 ]
 
+<<<<<<< HEAD
 p = poker.poker(players, 10, force_log = True);
+=======
+<<<<<<< HEAD
+#p = poker.poker(players, 250, debug_mode=False);
+p = poker.poker(players, 50, debug_mode=True);
+
+=======
+p = poker.poker(players, 1000);
+>>>>>>> fa87ec10b85eb55e17280e5e8723ce7a16487a79
 '''
+>>>>>>> 98017cbbe3e24967de776ff633e488ae011950ac

@@ -4,12 +4,13 @@ import cards
 # Class for running a poker-game
 class poker():
 
-  def __init__(self, players, n_rounds = 1, n_games = 1, force_log = False):
+  def __init__(self, players, n_rounds = 1, n_games = 1, debug_mode = False):
     self.n_games = n_games
     self.n_rounds = n_rounds
-    self.show_data = force_log
+    self.debug_mode = debug_mode
     self.players = players
     self.last_raise = 0
+    self.state = 0;
 
     for i in range(n_games):
       self.start_game()
@@ -20,12 +21,12 @@ class poker():
     
     # Main game loop/structure. Based on Texas Hold 'Em rules
     for i in range(self.n_rounds):
-
+      # Reset info
       self.deck.reset()
-
+      self.state = 1 # 1 = Pre-flop
       self.round = i
       print('\n')
-      self.log("------------------------------- Round #", self.round, "-----------------------------------")
+      print("================================== Round #", self.round, "State: ",self.state," ========================================")
 
       # Shuffle for big blind/small blind
       if(i != 0):
@@ -63,10 +64,10 @@ class poker():
         p[0][0].print_info(self.shared_cards)
         continue
 
-      self.log("----- FLOP ------")
+      print("====== FLOP ======")
       self.deal_flop()
       self.do_betting_round()
-      self.log("----- END FLOP ------")
+      print("====== END FLOP ======")
 
       p = self.calculate_win()
       if p:
@@ -74,31 +75,31 @@ class poker():
         p[0][0].print_info(self.shared_cards)
         continue
 
-      self.log("----- TURN ------")
+      print("====== TURN ======")
       self.deal_turn()
       self.do_betting_round()
-      self.log("----- END TURN ------")
+      print("====== END TURN ======")
 
       p = self.calculate_win()
       if p:
-        self.log("Winner:")
+        print("Winner:")
         p[0][0].print_info(self.shared_cards)
         continue
 
-      self.log("----- RIVER ------")
+      print("====== RIVER ======")
       self.deal_river()
       self.do_betting_round()
-      self.log("----- END RIVER ------")
+      print("====== END RIVER ======")
 
       p = self.calculate_win(True)
       if p:
-        self.log("Winner(s) with hand ranking:", p[1])
+        print("Winner(s) with hand ranking:", p[1])
         for winner in p[0]:
           winner.print_info(self.shared_cards)
         continue
-
+      
       # Serve a fresh deck
-    self.log("\n\n\n\n=========== THE POKER GAME IS FINISHED ===============")
+    print("\n\n\n\n=========== THE POKER GAME IS FINISHED ===============")
     self.show_all_player_stats()
 
 
@@ -106,30 +107,29 @@ class poker():
   def deal_flop(self):
     self.flop = self.deck.deal_n_cards(3)
     self.shared_cards = self.flop
-    self.log("Round #", self.round, ", Flop:", cards.card_names(self.flop))
+    self.state += 1 # State should be 2 = post-flop
+    self.log("Round #", self.round, ", Flop:", cards.card_names(self.flop), "- State:", self.state)
     self.show_shared_cards()
-    self.show_active_player_stats()
+    if(self.debug_mode): self.show_active_player_stats()
 
   def deal_turn(self):
     self.turn = self.deck.deal_one_card()
-
-    self.log("Round #", self.round, "- Turn:", cards.card_name(self.turn))
-    
+    self.state += 1 # State should be 3 = post-turn
+    self.log("Round #", self.round, "- Turn:", cards.card_name(self.turn), "- State:", self.state)
     self.shared_cards += [self.turn]
     self.show_shared_cards()
-    self.show_active_player_stats()
+    if(self.debug_mode): self.show_active_player_stats()
 
   def deal_river(self):
     self.river = self.deck.deal_one_card()
-
-    self.log ("Round #", self.round, "- River:", cards.card_name(self.river))
-
+    self.state += 1 # State should be 4 = post-river
+    self.log ("Round #", self.round, "- River:", cards.card_name(self.river), "- State:", self.state)
     self.shared_cards += [self.river]
     self.show_shared_cards()
-    self.show_active_player_stats()
+    if(self.debug_mode): self.show_active_player_stats()
 
   def do_betting_round(self, do_reset_bets = True):
-    self.log("------ START BETTING ROUND -------")
+    print("====== START BETTING ROUND ======")
     self.show_table_status()
     self.log("Pot:", self.pot)
 
@@ -154,19 +154,22 @@ class poker():
       action = p.take_action(highest_bet, self.pot, self.count_active_players(self.active_players), i, self.shared_cards)
       self.log("Highest bet after take action :", highest_bet)
 
-      # Action returns a list [<0|1>, amount] 0 = Call, 1 = raise
+      # Action returns a list [<0|1|2>, amount] 0 = Call, 1 = raise, 2 = check
 
       if not(action): # Fold
         self.active_players[i] = None
       else:
+        # The player called, checked or raised, add the amount to the pot
         self.pot += action[1]
-        self.log("Total pot: ", self.pot)
+        print("Total pot: ", self.pot)
         if action[0] == 1:
+          # Player raised; put the player that raised on the bottom of the turn-list
+          # continue the betting round
           self.active_players = self.active_players[(i+1):] + self.active_players[:(i+1)]
           if i != len(self.active_players):
             return self.do_betting_round(False)
         
-    self.log("------ END BETTING ROUND -------")
+    print("====== END BETTING ROUND ======")
     
     
   def count_active_players(self, player_list):
@@ -192,9 +195,13 @@ class poker():
           continue
         
         ranking = cards.calc_cards_power(p.cards + self.shared_cards)
+        #If the players cards are better than the current winner,
+        #the player is set as the current winner
         if ranking[0] > winner[1][0]:
           winner = [[p], ranking]
         elif ranking[0] == winner[1][0]:
+          #If the player has the same cards as the current winner,
+          #they will share the pot, so we add the player to the winner-table
           if ranking == winner[1]:
             winner[0].append(p)
           else:
@@ -205,7 +212,21 @@ class poker():
       
       for p in winner[0]:
         print("Pot is added to winner after last round")
-        p.win(self.pot/len(winner[0]))
+        #p.win(self.pot/len(winner[0]))
+        winners = len(winner[0])
+        if(winners > 1): 
+          # It's a tie, register it, and split the money
+          p.showdown_tie(self.pot/winners)
+        else:
+          # Only one winner, give him the money!
+          p.showdown_win(self.pot/winners)
+      
+      #Check who lost the showdown
+      for p in self.active_players:
+        if p != None:
+          if not p in winner[0]:
+            # Register loss on the players
+            p.showdown_loss()
 
       return winner
     
@@ -220,18 +241,17 @@ class poker():
     print('Shared cards: '+str(self.shared_cards))
     print('Players left, with credits and hole cards :')
     self.show_active_player_stats()
+    print('====== END TABLE STATUS ======')
 
   def show_active_player_stats(self):
     sum = 0
-    #print('\n')
-    self.log("------ Active player stats -----")
+    self.log("====== Active player stats ======")
     for p in self.active_players:
       if p != None:
         p.print_info(self.shared_cards)
         sum += p.money
     self.log("Total sum : ", sum+self.pot)
-    self.log("---- END active player stats ---")
-    print('\n')
+    self.log("====== END Active player stats ======")
 
   def show_all_player_stats(self):
     sum = 0
@@ -239,7 +259,7 @@ class poker():
     best_player = None
     max_money = 0
     print('\n')
-    self.log("------ TOTAL PLAYER STATS ------")
+    print("====== TOTAL PLAYER STATS ======")
     for p in self.players:
       p.print_info(self.shared_cards)
       sum += p.money
@@ -247,14 +267,13 @@ class poker():
       if (p.money > max_money):
         best_player = p
         max_money = p.money
-    self.log("Number of players : ", nr_of_players)
-    self.log("Best player was ", best_player.name, "with", best_player.money, "credits")
-    self.log("Total sum : ", sum)
-    self.log("----- END TOTAL PLAYER STATS ------")
+    print("Number of players : ", nr_of_players)
+    print("Best player was ", best_player.name, "with", best_player.money, "credits")
+    print("Total sum : ", sum)
+    print("====== END TOTAL PLAYER STATS ======")
     print('\n')
 
   def log(self, *message, **argv):
-    if (self.show_data): 
-      # print(*message, sep=" ", end=".\n") # Python 3.0 syntax
-      #print message # python 2 syntax
-      print(*message, sep=" ", end="\n") # Python 3.0 syntax
+    if (self.debug_mode): 
+      #print(*message, sep=" ", end="\n") # Python 3.0 syntax
+      print message # python 2 syntax

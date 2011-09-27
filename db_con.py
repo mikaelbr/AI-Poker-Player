@@ -43,10 +43,8 @@ class DB_Con ():
         self.c.execute("SELECT * FROM opponent_modeling")
         return self.c.fetchall()
 
-
-
-    # in form of [[context, player, action, strength], [context, player, action, strength], ... ]
-    def insert_data(self, data):
+    # in form of [[context, action], [context, action], ... ]
+    def insert_data(self, data, player, strength):
 
         for c in data:
             prev_value = self.get_hand_strength(c[0],c[1],c[2])
@@ -59,9 +57,9 @@ class DB_Con ():
 
         self.conn.commit()
 
-'''
-db = DB_Con()
 
+db = DB_Con()
+db = DB_Con()
 
 contexts = [
     [db.generate_context(1, 3, 1, float(30.0/(45.0+30.0))), "Mikael", "call", 0.8531],
@@ -77,4 +75,4 @@ print("Strength: %s" % db.get_hand_strength(db.generate_context(1, 3, 1, float(3
 
 
 print(db.get_dump())
-'''
+
