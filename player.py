@@ -26,10 +26,10 @@ class Player():
 
 
     if (is_big):
-      print("Big blind:", self.name)
+      print("Big blind:", self.name, "puts", float(self._raise_limit), "in the pot")
       return self.bet_action(self._raise_limit)
     elif (is_small):
-      print("Small blind:", self.name)
+      print("Small blind:", self.name, "puts", (self._raise_limit/2), "in the pot")
       return self.bet_action(self._raise_limit/2)
     else:
       return 0

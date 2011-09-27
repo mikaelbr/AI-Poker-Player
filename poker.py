@@ -25,7 +25,7 @@ class poker():
 
       self.round = i
       print('\n')
-      self.log("------------------------------- Round #", self.round, "-----------------------------------")
+      print("------------------------------- Round #", self.round, "-----------------------------------")
 
       # Shuffle for big blind/small blind
       if(i != 0):
@@ -129,7 +129,7 @@ class poker():
     self.show_active_player_stats()
 
   def do_betting_round(self, do_reset_bets = True):
-    self.log("------ START BETTING ROUND -------")
+    print("====== START BETTING ROUND ======")
     self.show_table_status()
     self.log("Pot:", self.pot)
 
@@ -160,13 +160,13 @@ class poker():
         self.active_players[i] = None
       else:
         self.pot += action[1]
-        self.log("Total pot: ", self.pot)
+        print("Total pot: ", self.pot)
         if action[0] == 1:
           self.active_players = self.active_players[(i+1):] + self.active_players[:(i+1)]
           if i != len(self.active_players):
             return self.do_betting_round(False)
         
-    self.log("------ END BETTING ROUND -------")
+    print("====== END BETTING ROUND ======")
     
     
   def count_active_players(self, player_list):
@@ -220,6 +220,7 @@ class poker():
     print('Shared cards: '+str(self.shared_cards))
     print('Players left, with credits and hole cards :')
     self.show_active_player_stats()
+    print('====== END TABLE STATUS ======')
 
   def show_active_player_stats(self):
     sum = 0
@@ -231,7 +232,6 @@ class poker():
         sum += p.money
     self.log("Total sum : ", sum+self.pot)
     self.log("---- END active player stats ---")
-    print('\n')
 
   def show_all_player_stats(self):
     sum = 0
