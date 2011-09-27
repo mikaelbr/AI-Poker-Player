@@ -248,5 +248,6 @@ class poker():
 
   def log(self, *message, **argv):
     if (self.show_data): 
-      print(*message, sep=" ", end=".\n") # Python 3.0 syntax
-      #print message # python 2 syntax
+      # print(*message, sep=" ", end=".\n") # Python 3.0 syntax
+      print message # python 2 syntax
+      
