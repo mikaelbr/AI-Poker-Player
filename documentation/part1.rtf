@@ -1,0 +1,25 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\pardirnatural
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+Basic structure of the code\
+\
+The code, written in python, is based on the code given as handouts to the project. All deck and card handling is left to this code. \
+\
+The main structure for game rules, player handling and general poker manager a module, \'abPoker\'bb, is used. \
+\
+Each player on the game is a subclass of a class \'abPlayer\'bb. This class handles all the generic player operations. I.e. a action like call, fold or raise uses the same implementation independent of phase. There are three subclasses of \'abPlayer\'bb; \'abPhase1\'bb, \'abPhase2\'bb and \'abPhase\'bb. Each of these subclasses are thin, with essentially only one method implemented - the rest of the methods are generic and inherited from the super class. The base class Player stores all different types of stats, like number of wins/ties/losses before and after showdown, latest action, total money. It also has control over play style, blinds and so on.\
+\
+The method implemented in each of the \'abPhase classes\'bb, take_action, uses the different strategies and takes advantage of the difference in knowledge. \
+\
+For starting a poker game, you can initiate the poker class and add a list of players as first argument. In the player list you can add all of the different phase players, in any combination. \
+\
+Other than the poker modules, there is a module for generating a pre flop rollout simulation named \'abpre_flop_rollout_sim.py\'bb and a module for calculating hand strength, \'abhand_strength.py\'bb. These are both used for phase two. \
+\
+For knowledge gathering in phase three, a module called \'abdb_con.py\'bb is used. This handles context generating and storing all the different data sets in a sqlite table. This module also has a function (actually method since it\'92s in a class) for finding estimated hand strength based on context, player and latest action. \
+\
+}
