@@ -11,7 +11,7 @@
 \contentsline {section}{\numberline {4}Multi-hand runs}{2}{section.4}
 \contentsline {subsection}{\numberline {4.1}Phase 1}{2}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}Phase 2}{4}{subsection.4.2}
-\contentsline {subsection}{\numberline {4.3}Phase 3}{6}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.3}Phase 3}{5}{subsection.4.3}
 \contentsline {section}{\numberline {5}Discussion}{6}{section.5}
 \contentsline {subsection}{\numberline {5.1}Phase 1}{6}{subsection.5.1}
 \contentsline {subsection}{\numberline {5.2}Phase 2}{6}{subsection.5.2}

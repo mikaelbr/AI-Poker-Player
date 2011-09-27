@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2011.5.25)  27 SEP 2011 22:57
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2011.5.25)  27 SEP 2011 23:25
 entering extended mode
 **report.tex
 
@@ -913,14 +913,14 @@ been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.98 \newpage
-              [1] [2] [1] [2] [3] [4] [5] AED: lastpage setting LastPage 
-[6]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 462.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 462.
+              [1] [2] [1] [2] [3] [4] AED: lastpage setting LastPage 
+[5] [6]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 432.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 432.
 
 ("C:\Users\akre\Documents\Dropbox\SKOLE\1MIT\IT3105 Kunstig intelligens program
 mering\kode\AI-Poker-Player\documentation\report.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 462.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 432.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 5616F485150543810FFC11FDE33E6D3F;967.
  ) 
@@ -935,7 +935,7 @@ Here is how much of TeX's memory you used:
 <C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 <C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:
 /Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on report.pdf (9 pages, 74660 bytes).
+Output written on report.pdf (9 pages, 73366 bytes).
 PDF statistics:
  174 PDF objects out of 1000 (max. 8388607)
  39 named destinations out of 1000 (max. 500000)
