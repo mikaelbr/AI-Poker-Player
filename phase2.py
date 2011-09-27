@@ -202,7 +202,7 @@ class Phase2(player.Player):
 # "tight_passive"
 # "loose_aggressive"
 
-
+'''
 players = [
   #Phase2("Mikael", 1000, "loose_aggressive"), 
   Phase2("Marius", 1000, "loose_aggressive"),
@@ -217,4 +217,4 @@ players = [
 ]
 
 p = poker.poker(players, 1000, debug_mode = True);
-
+'''

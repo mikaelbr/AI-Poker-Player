@@ -234,7 +234,7 @@ class poker():
       #Check who lost the showdown
       for p in self.active_players:
         if p != None:
-          #p.save_modeling(count_active, self.shared_cards)
+          p.save_modeling(count_active, self.shared_cards)
           if not p in winner[0]:
             # Register loss on the players
             p.showdown_loss()
