@@ -6,8 +6,6 @@ import pickle
 import phase1
 
 
-
-
 with open('dataset_huge', 'rb') as f:
   dataset = pickle.load(f)   
    
@@ -70,33 +68,6 @@ class Phase2(player.Player):
     else:
       return self.take_tight_passive_action(highest_bet, pot, players, position, shared_cards, state, total_raises, strength)
 
-    '''
-    # Simple solutions for testing (don't take pre/post flop into account)
-    self.last_action = ""
-    if strength > 0.7 and self.raise_count < 3: # raise
-      if(self.sum_pot_in == highest_bet):
-        # Check
-        self.last_action = "check"
-        ret = self.call_action(highest_bet)
-      else:
-        self.last_action = "raise"
-        ret = self.raise_action(highest_bet)
-    elif strength > 0.3: # call
-      self.last_action = "call"
-      ret = self.call_action(highest_bet)
-    else: #fold
-      if self.sum_pot_in == highest_bet:
-        self.last_action = "check"
-        ret = self.call_action(highest_bet)
-      else:
-        return self.fold_action()
-
-    if self.last_action != "":
-      self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, self.last_action)
-
-    return ret
-    '''
-
 
   def take_loose_aggressive_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises, strength):
     #1. Highest card
@@ -110,8 +81,7 @@ class Phase2(player.Player):
     #9. Straight Flush - with Royal Flush being the highest of these
 
     ranking = cards.calc_cards_power(self.cards + shared_cards) # calculate hand ranking
-    action = ""
-    ret = None
+    self.last_action = ""
 
     if state == 1:
       # Pre-flop
@@ -132,7 +102,7 @@ class Phase2(player.Player):
           self.last_action = "check"
           ret = self.call_action(highest_bet)
         else:
-          ret = self.fold_action()
+          return self.fold_action()
     elif state >= 2:
       # Post-flop
       if(self.raise_count > 5):
@@ -146,9 +116,9 @@ class Phase2(player.Player):
           self.last_action = "check"
           ret = self.call_action(highest_bet)
         else:
-          ret = self.fold_action()        
+          return self.fold_action()        
     else:
-      ret = self.fold_action()
+      return self.fold_action()
     
     if self.last_action != "":
       self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, self.last_action)

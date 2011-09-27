@@ -72,7 +72,7 @@ class Phase1(player.Player):
           self.last_action = "check"
           ret = self.call_action(highest_bet)
         else:
-          ret = self.fold_action()
+          return self.fold_action()
     elif state >= 2:
       # Post-flop
       if(self.raise_count > 5):
@@ -89,9 +89,9 @@ class Phase1(player.Player):
           self.last_action = "check"
           ret = self.call_action(highest_bet)
         else:
-          ret = self.fold_action()        
+          return self.fold_action()        
     else:
-      ret = self.fold_action()
+      return self.fold_action()
     
     if self.last_action != "":
       self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, self.last_action)

@@ -100,7 +100,7 @@ class Player():
     return bet
 
   def win(self, pot):
-    self.money += float(pot)
+    self.money += pot
     self.sum_pot_in = 0
     self.total_pre_showdown_win += 1
 
