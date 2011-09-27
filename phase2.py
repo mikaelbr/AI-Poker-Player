@@ -114,5 +114,5 @@ players = [
   phase1.Phase1("Andre the giant", 1000, "tight_aggressive")
 ]
 
-p = poker.poker(players, 1000, debug_mode = True);
+p = poker.poker(players, 50, debug_mode = True);
 
