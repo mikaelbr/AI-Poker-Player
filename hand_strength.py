@@ -76,7 +76,7 @@ class HandStrength:
 
 
 
-
+'''
 deck = cards.card_deck()
 H = deck.deal_n_cards(2)
 S = deck.deal_n_cards(5)
@@ -87,3 +87,8 @@ print(cards.calc_cards_power(H + S))
 
 hand_strength = HandStrength(2)
 hand_strength.calculate(H, S)
+'''
+
+
+
+
