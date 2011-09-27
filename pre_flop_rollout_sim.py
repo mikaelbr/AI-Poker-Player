@@ -57,8 +57,6 @@ class PreFlopSim:
             self.pairs.append([card_list[i], card_list[i+13]])
 
     def calculate_results(self, player, opponents, shared_cards):
-        results = {"win": 0, "loss":0, "tie": 0}
-
         loss = False
         tie = False
 
@@ -69,7 +67,7 @@ class PreFlopSim:
             if o[0] > pl[0]:
               loss = True
             elif o[0] == pl[0]:
-              if o == pl[1]:
+              if o == pl:
                 tie = True
               else:
                 for j in range(1, len(o)):
@@ -147,7 +145,7 @@ class PreFlopSim:
                 if not self.isset(self.generated_eqv_table[p], su_key):
                     self.generated_eqv_table[p][su_key] = {"unsuited": "", "suited": ""}
 
-                self.generated_eqv_table[p][su_key]["suited"] = float(results_unsuited["win"]) / float(self.R)            
+                self.generated_eqv_table[p][su_key]["suited"] = float(results_suited["win"]) / float(self.R)            
 
             # Check for pairs. 
             for i in range(len(self.pairs)):
@@ -165,17 +163,17 @@ class PreFlopSim:
             
 
 
-preflopsim = PreFlopSim(10, 300)
+preflopsim = PreFlopSim(10, 1200)
 table = preflopsim.simulate()
 
 print(table)
 
-fileObj = open("dataset_large","w")
+fileObj = open("dataset_huge","w")
 pickle.dump(table, fileObj)
 fileObj.close()
 
 
-fileRead = open("dataset_large","r")
+fileRead = open("dataset_huge","r")
 table2 = pickle.load(fileRead)
 
 print(table2)
