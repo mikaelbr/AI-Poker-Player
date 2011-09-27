@@ -7,11 +7,13 @@ import phase1
 
 
 
-dataset_src = open("dataset_huge","r")
-dataset = pickle.load(dataset_src)
-dataset_src.close()
 
-print(dataset)
+with open('dataset_huge', 'rb') as f:
+  dataset = pickle.load(f)   
+   
+#data = open("dataset_huge","r")
+# dataset = pickle.load(data)
+#data.close()
 
 def isset(var, v):
   try:
@@ -27,7 +29,8 @@ def fetch_rollout_data(players, hole_cards):
 
   suits = "suited" if cards.card_suit(hole_cards[0]) == cards.card_suit(hole_cards[1]) else "unsuited"
 
-  print("Players: %s" % players)
+  if players < 2:
+    return 1
 
   if isset(dataset[players], val1):
     return dataset[players][val1][suits]
@@ -35,7 +38,7 @@ def fetch_rollout_data(players, hole_cards):
   if isset(dataset[players], val2):
     return dataset[players][val2][suits]
 
-  return False
+  return 0
 
 
 
@@ -50,20 +53,26 @@ class Phase2(player.Player):
     else:
       # Use hand strength calculations
       hand = hand_strength.HandStrength(players)
-      strength = hand.calculations(self.cards, shared_cards)
+      strength = hand.calculate(self.cards, shared_cards)
 
     # We now have strength. Use this to take actions. 
 
+    if not strength:
+      strength = 0
+
     # Simple solutions for testing (don't take pre/post flop into account)
 
-    if strength > 0.7: # raise
+    if strength > 0.7 and self.raise_count < 3: # raise
+      if(self.sum_pot_in == highest_bet):
+        return self.call_action(highest_bet)
       return self.raise_action(highest_bet)
     elif strength > 0.3: # call
       return self.call_action(highest_bet)
     else: #fold
+      if self.sum_pot_in == highest_bet:
+        return self.call_action(highest_bet)
+
       return self.fold_action()
-
-
 
 
 
@@ -93,5 +102,5 @@ players = [
   phase1.Phase1("Andre the giant", 1000, "tight_aggressive")
 ]
 
-p = poker.poker(players, 10);
+p = poker.poker(players, 1000, force_log = True);
 
