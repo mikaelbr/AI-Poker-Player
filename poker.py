@@ -1,5 +1,6 @@
 import player
 import cards
+import sys
 
 # Class for running a poker-game
 class poker():
@@ -281,5 +282,8 @@ class poker():
 
   def log(self, *message, **argv):
     if (self.debug_mode): 
-      #print(*message, sep=" ", end="\n") # Python 3.0 syntax
-      print message # python 2 syntax
+      if sys.version_info > (3, 0):
+        eval('print(*message, sep=" ", end="\\n")') # Python 3.0 syntax
+      else: 
+        print(message) # python 2 syntax
+      

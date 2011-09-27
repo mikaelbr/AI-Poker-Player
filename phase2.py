@@ -87,13 +87,6 @@ class Phase2(player.Player):
     return ret
 
 
-
-
-
-  
-  
-
-
 # Play styles:
 # "tight_passive"
 # "tight_aggressive"

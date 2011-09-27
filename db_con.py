@@ -68,13 +68,11 @@ class DB_Con:
 
         self.conn.commit()
 
+'''
 
 db = DB_Con()
 for i in db.get_dump():
     print(i)
-
-'''
-
 
 contexts = [
     [db.generate_context(1, 3, 1, float(30.0/(45.0+30.0))), "Mikael", "call", 0.8531],
