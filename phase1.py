@@ -18,19 +18,93 @@ class Phase1(player.Player):
       return self.take_tight_passive_action(highest_bet, pot, players, position, shared_cards, state, total_raises)
     else:
       #This is what we want...
-      #take_loose_aggressive_action(self, highest_bet, pot, players, position, shared_cards)
+      return self.take_loose_aggressive_action(highest_bet, pot, players, position, shared_cards, state, total_raises)
       #but for now, we will all be tight-passive :)
-      return self.take_tight_passive_action(highest_bet, pot, players, position, shared_cards, state, total_raises)
+      #return self.take_tight_passive_action(highest_bet, pot, players, position, shared_cards, state, total_raises)
   
-  def take_tight_aggressive_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises):
-    ranking = cards.calc_cards_power(self.cards + shared_cards) # calculate hand ranking
+  def take_loose_aggressive_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises):
+    #1. Highest card
+    #2. One pair
+    #3. Two pair
+    #4. 3 of a kind
+    #5. Straight
+    #6. Flush
+    #7. Full House
+    #8. 4 of a kind
+    #9. Straight Flush - with Royal Flush being the highest of these
 
-    if len(shared_cards) < 1: # pre-flop
-      pass
+    ranking = cards.calc_cards_power(self.cards + shared_cards) # calculate hand ranking
+    action = ""
+    ret = None
+
+    if state == 1:
+      # Pre-flop
+      if ranking[0] == 1 and ranking[1] > 12: #High card and highest card is above 10
+        # Raise
+        if(self.raise_count > 5):
+          self.last_action = "call"
+          ret = self.call_action(highest_bet)
+        else:
+          if(self.sum_pot_in == highest_bet):
+            self.last_action = "check"
+            ret = self.call_action(highest_bet)
+          else:
+            self.last_action = "raise"
+            ret = self.raise_action(highest_bet)
+      elif ranking[0] == 2: # Hole pair.. RAISE!
+        if(self.raise_count > 5):
+          self.last_action = "call"
+          ret = self.call_action(highest_bet)
+        else:
+          if(self.sum_pot_in == highest_bet):
+            self.last_action = "check"
+            ret = self.call_action(highest_bet)
+          else:
+            self.last_action = "raise"
+            ret = self.raise_action(highest_bet)
+      else:
+        if(self.sum_pot_in == highest_bet):
+          self.last_action = "check"
+          ret = self.call_action(highest_bet)
+        else:
+          ret = self.fold_action()
+    elif state >= 2:
+      # Post-flop
+      if(self.raise_count > 5):
+        self.last_action = "call"
+        ret = self.call_action(highest_bet)
+      else:
+        if ranking[0] == 2 and players < 4 and self.sum_pot_in != highest_bet:
+          self.last_action = "raise"
+          ret = self.raise_action(highest_bet)
+        elif ranking[0] > 3 and self.sum_pot_in != highest_bet:
+          self.last_action = "raise"
+          ret = self.raise_action(highest_bet)
+        elif self.sum_pot_in == highest_bet:
+          self.last_action = "check"
+          ret = self.call_action(highest_bet)
+        else:
+          ret = self.fold_action()        
     else:
-      pass # post-flop
+      ret = self.fold_action()
+    
+    if action != "":
+      self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, self.last_action)
+
+    print("DEBUG RET FROM AGGRESSIVE ===================== ", ret)
+    return ret
 
   def take_tight_passive_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises):
+    #1. Highest card
+    #2. One pair
+    #3. Two pair
+    #4. 3 of a kind
+    #5. Straight
+    #6. Flush
+    #7. Full House
+    #8. 4 of a kind
+    #9. Straight Flush - with Royal Flush being the highest of these
+
     ranking = cards.calc_cards_power(self.cards + shared_cards) # calculate hand ranking
 
     action = ""
@@ -87,7 +161,7 @@ class Phase1(player.Player):
         ret = self.call_action(highest_bet)
     
     if action != "":
-      self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, action)
+      self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, self.last_action)
 
     return ret
 
@@ -100,8 +174,8 @@ class Phase1(player.Player):
 
 players = [
   Phase1("Mikael", 1000, "loose_aggressive"),
-  Phase1("Marius", 1000, "loose_aggressive"),
-  Phase1("Martin", 1000, "loose_aggressive"),
+  Phase1("Marius", 1000, "tight_passive"),
+  Phase1("Martin", 1000, "loose_agressive"),
   Phase1("Jostein", 1000, "loose_passive"),
   Phase1("Emil", 1000, "loose_passive"),
   Phase1("Steinar", 1000, "loose_passive"),
@@ -112,4 +186,4 @@ players = [
 ]
 
 #p = poker.poker(players, 250, debug_mode=False);
-p = poker.poker(players, 50, debug_mode=True);
+p = poker.poker(players, 1000, debug_mode=True);

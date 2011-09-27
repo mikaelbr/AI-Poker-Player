@@ -147,6 +147,8 @@ class poker():
 
       if do_reset_bets:
         p.sum_pot_in = 0
+        # We also want to reset every players action from last round
+        p.last_action = ""
 
       highest_bet = 0 if self.active_players[-1] == None else self.active_players[-1].last_bet
       if do_reset_bets:
@@ -229,7 +231,7 @@ class poker():
       #Check who lost the showdown
       for p in self.active_players:
         if p != None:
-          p.save_modeling(count_active, self.shared_cards)
+          #p.save_modeling(count_active, self.shared_cards)
           if not p in winner[0]:
             # Register loss on the players
             p.showdown_loss()
@@ -267,7 +269,7 @@ class poker():
     print('\n')
     print("====== TOTAL PLAYER STATS ======")
     for p in self.players:
-      p.print_info(self.shared_cards)
+      p.print_action_info(self.shared_cards)
       sum += p.money
       nr_of_players+=1
       if (p.money > max_money):
