@@ -43,8 +43,6 @@ class HandStrength:
             else: 
                 result['win'] += 1
 
-        print(i)
-
         # Return win tables. 
         return result
 
@@ -68,7 +66,7 @@ class HandStrength:
 
         results = self.calculate_results(player_cards, opponents, shared_cards)
         hand_ranking = pow(((results["win"]+0.5*results["tie"])/(results["win"]+results["tie"]+results["loss"])), self.num_players)
-        
+
 
         return hand_ranking
 

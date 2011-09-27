@@ -29,6 +29,8 @@ class Player():
     self.total_showdown_loss = 0
     self.total_pre_showdown_win = 0
 
+    self.calculated_opponent_models = {} # only used by phase 3 player
+
 
   def set_cards(self, cards):
     self.cards = cards
@@ -39,6 +41,7 @@ class Player():
   def new_round(self, is_small = False, is_big = False):
     self.sum_pot_in = 0
     self.is_blind = is_big or is_small
+    self.raise_count = 0
 
     self.modeling = []
 

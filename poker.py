@@ -155,7 +155,7 @@ class poker():
       if do_reset_bets:
         highest_bet = 0
       self.log("Highest bet before take action :", highest_bet)
-      action = p.take_action(highest_bet, self.pot, self.count_active_players(self.active_players), i, self.shared_cards, self.state, self.total_raises)
+      action = p.take_action(highest_bet, self.pot, self.count_active_players(self.active_players), i, self.shared_cards, self.state, self.total_raises, self.active_players)
       self.log("Highest bet after take action :", highest_bet)
 
       # Action returns a list [<0|1|2>, amount] 0 = Call, 1 = raise, 2 = check
@@ -174,6 +174,8 @@ class poker():
           if i != len(self.active_players):
             return self.do_betting_round(False)
         
+      p.opponent_model_update_array(highest_bet, self.pot, self.count_active_players(self.active_players), i, self.shared_cards, self.state, self.total_raises, self.active_players)
+
     print("====== END BETTING ROUND ======")
     
     

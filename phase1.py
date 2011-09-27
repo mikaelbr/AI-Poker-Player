@@ -3,7 +3,12 @@ import player
 import poker
 
 class Phase1(player.Player):
-  def take_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises):
+
+  def opponent_model_update_array (self, highest_bet, pot, players, position, shared_cards, state, total_raises, active_players):
+    pass
+
+
+  def take_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises, active_players):
     if(self.play_style == "tight_passive"):
       return self.take_tight_passive_action(highest_bet, pot, players, position, shared_cards, state, total_raises)
     elif self.play_style == "loose_passive":
@@ -88,7 +93,7 @@ class Phase1(player.Player):
     else:
       ret = self.fold_action()
     
-    if action != "":
+    if self.last_action != "":
       self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, self.last_action)
 
     #print("DEBUG RET FROM AGGRESSIVE ===================== ", ret)
@@ -115,25 +120,25 @@ class Phase1(player.Player):
         # raise if not already committed equally to highest bet
         # check otherwise (call 0)
         if(self.sum_pot_in == highest_bet):
-          action = "check"
+          self.last_action = "check"
           ret = self.call_action(highest_bet)
         else:
-          action = "raise"
+          self.last_action = "raise"
           ret = self.raise_action(highest_bet)
 
       elif ranking[0] == 1 and ranking[1] > 10 and ranking[2] > 10: # high card
         # call
-        action = "call"
+        self.last_action = "call"
         ret = self.call_action(highest_bet)
 
       elif self.cards[0][1] == self.cards[1][1] and ranking[1] > 10 and ranking[2] > 10: # suited high
         # call
-        action = "call"
+        self.last_action = "call"
         ret = self.call_action(highest_bet)
 
       elif self.sum_pot_in == highest_bet:
         # check, we use call for this purpose(calls 0)
-        action = "check"
+        self.last_action = "check"
         ret = self.call_action(highest_bet)
 
       else:
@@ -145,10 +150,10 @@ class Phase1(player.Player):
         # raise if not already committed equally to highest bet
         # check otherwise (call 0)
         if(self.sum_pot_in == highest_bet):
-          action = "check"
+          self.last_action = "check"
           ret = self.call_action(highest_bet)
         else:
-          action = "raise"
+          self.last_action = "raise"
           ret = self.raise_action(highest_bet)
 
       elif highest_bet != self.sum_pot_in and ((ranking[0] == 1) or (ranking[0] == 2 and ranking[1] < 12) ):
@@ -157,10 +162,10 @@ class Phase1(player.Player):
 
       else:
         # call/check
-        action = "call" if highest_bet != self.sum_pot_in else "check"
+        self.last_action = "call" if highest_bet != self.sum_pot_in else "check"
         ret = self.call_action(highest_bet)
     
-    if action != "":
+    if self.last_action != "":
       self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, self.last_action)
 
     return ret
@@ -169,7 +174,7 @@ class Phase1(player.Player):
 # Play styles:
 # "tight_passive"
 # "loose_aggressive"
-
+'''
 players = [
   Phase1("Mikael", 1000, "loose_aggressive"),
   Phase1("Marius", 1000, "tight_passive"),
@@ -185,3 +190,4 @@ players = [
 
 #p = poker.poker(players, 250, debug_mode=False);
 p = poker.poker(players, 1000, debug_mode=True);
+'''
