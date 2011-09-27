@@ -1,6 +1,6 @@
 import sqlite3
 
-class DB_Con ():
+class DB_Con:
 
     def __init__ (self):
         self.conn = sqlite3.connect('db_file')
@@ -58,7 +58,7 @@ class DB_Con ():
         for c in data:
             # c1 = context, c2 = action. 
 
-            prev_value = self.get_hand_strength(c[0],player,c[2])
+            prev_value = self.get_hand_strength(c[0],player,c[1])
             if prev_value:
                 # update value
                 self.c.execute("UPDATE opponent_modeling SET strength = (strength+?)/2, num_raises = num_raises + 1", (strength))

@@ -39,6 +39,7 @@ class poker():
       self.river = []
       self.shared_cards = []
       self.active_players = self.players[:]
+      self.total_raises = 0
 
       # Deal hole cards 
       j = 0
@@ -151,7 +152,7 @@ class poker():
       if do_reset_bets:
         highest_bet = 0
       self.log("Highest bet before take action :", highest_bet)
-      action = p.take_action(highest_bet, self.pot, self.count_active_players(self.active_players), i, self.shared_cards)
+      action = p.take_action(highest_bet, self.pot, self.count_active_players(self.active_players), i, self.shared_cards, self.state, self.total_raises)
       self.log("Highest bet after take action :", highest_bet)
 
       # Action returns a list [<0|1|2>, amount] 0 = Call, 1 = raise, 2 = check
@@ -165,6 +166,7 @@ class poker():
         if action[0] == 1:
           # Player raised; put the player that raised on the bottom of the turn-list
           # continue the betting round
+          self.total_raises += 1
           self.active_players = self.active_players[(i+1):] + self.active_players[:(i+1)]
           if i != len(self.active_players):
             return self.do_betting_round(False)

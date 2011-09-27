@@ -3,7 +3,7 @@ import db_con
 import hand_strength
 
 
-db = DB_Con()
+db = db_con.DB_Con()
 
 
 # Base class. 
