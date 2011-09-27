@@ -61,18 +61,18 @@ class DB_Con:
             prev_value = self.get_hand_strength(c[0],player,c[1])
             if prev_value != False:
                 # update value
-                self.c.execute("UPDATE opponent_modeling SET strength = ((strength+?)/2), num_raises = (num_raises+1) WHERE context = ? AND player = ? AND action = ?", (strength, c[0], player, c[1]))
+                self.c.execute("UPDATE opponent_modeling SET strength = ((strength+?)/2), num_vals = (num_vals+1) WHERE context = ? AND player = ? AND action = ?", (strength, c[0], player, c[1]))
                 pass
             else: # Insert new
                 self.c.execute("INSERT INTO opponent_modeling VALUES (?, ?, ?, ?, ?)", (c[0],player,c[1],strength,1))
 
         self.conn.commit()
-
+'''
 db = DB_Con()
 for i in db.get_dump():
     print(i)
 
-'''
+
 
 contexts = [
     [db.generate_context(1, 3, 1, float(30.0/(45.0+30.0))), "Mikael", "call", 0.8531],
