@@ -1,0 +1,463 @@
+\documentclass[a4paper, 12pt]{article}
+
+% Bruker UTF-8
+\usepackage[utf8]{inputenc}
+
+% Setter opp geometry til a4paper og endrer på nye paragrafer
+% slik at man slipper indentation
+\usepackage[hmargin=2.5cm,vmargin=3cm]{geometry}
+\usepackage[parfill]{parskip}
+
+%Setter 1,5 linjeavstand
+\usepackage{setspace}
+\onehalfspacing
+
+% Setter mindre 
+% \usepackage{fullpage}
+
+% Hvis norsk språk, uncomment
+\usepackage[norsk]{babel}
+
+\usepackage{subfig}
+% Setter opp header
+% Bruk \lhead, \rhead, \rfoot, \lfoot etc.
+\usepackage{fancyhdr}
+\setlength{\headheight}{15.2pt}
+\pagestyle{fancy}
+\usepackage{lastpage}
+
+%\setlength{\headheight}{15.2pt}
+%\pagestyle{fancy}
+%\usepackage{lastpage}
+
+\usepackage{floatrow}
+% Table float box with bottom caption, box width adjusted to content
+\newfloatcommand{capbtabbox}{table}[][\FBwidth]
+
+\newenvironment{myindentpar}[1]%
+{\begin{list}{}%
+         {\setlength{\leftmargin}{#1}}%
+         \item[]%
+}
+{\end{list}}
+
+% Div kjekke pakker
+\usepackage{amsmath, amssymb, latexsym, boxedminipage, listings}
+\usepackage{enumerate}
+\usepackage{mdwlist}
+\usepackage[table, usenames,dvipsnames]{xcolor}
+\usepackage{longtable}
+
+% For enda bedre orddeling
+\usepackage{microtype}
+
+% Pakke for å inkludere andre tex-dokumenter
+\usepackage[final]{pdfpages}
+
+% This is now the recommended way for checking for PDFLaTeX:
+\usepackage{ifpdf}
+
+\usepackage{graphicx}
+\usepackage[pdfborder={0 0 0}]{hyperref}
+
+\pagenumbering{Roman}
+
+\DeclareGraphicsExtensions{.pdf, .jpg, .tif, .eps}
+\lhead{IT3105 Project I: Texas Hold 'Em}
+\rhead{Version 1.0}
+\cfoot{}
+\cfoot{\thepage}
+
+\title{IT3105 Project I: Texas Hold 'Em}
+\author{Martin Akre Midtsund & Mikael Brevik}
+
+
+% Countere for kapitler etc. og toc
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+\begin{document}
+
+\begin{titlepage}
+
+	\begin{center}
+		{ \LARGE IT3105 Project I: Texas Hold 'Em }\\[1.5cm]
+
+		{ \Large Mikael Brevik \& Martin Akre Midtsund }\\[0.5cm]
+
+	\end{center}
+
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+\listoffigures
+\listoftables
+\thispagestyle{fancy}
+\newpage
+
+\pagenumbering{arabic}
+
+\section{Basic code structure}
+
+\subsection{Phase 1}
+To be filled in..
+
+\subsection{Phase 2}
+To be filled in..
+
+\subsection{Phase 3}
+To be filled in..
+
+\section{Betting decision logic}
+
+\subsection{Phase 1}
+To be filled in..
+
+\subsection{Phase 2}
+To be filled in..
+
+\subsection{Phase 3}
+To be filled in..
+
+\section{Opponent models and contexts}
+To be filled in..
+
+\section{Multi-hand runs}
+
+\subsection{Phase 1}
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 1: First 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & 22682,50 \\
+		\hline
+		Mikael & 1 & Loose aggressive & 10307,50 \\
+		\hline
+		Marius & 1 & Tight passive & -2600 \\
+		\hline
+		Jostein & 1 & Tight passive & -7152,50 \\
+		\hline
+		Emil & 1 & Tight passive & -5877,50 \\
+		\hline
+		Steinar & 1 & Tight passive & -5427,50 \\
+		\hline
+		Stian & 1 & Tight passive & -4932,50 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{First phase 1 run}
+\end{table}
+% ------ END TABLE 1000-run
+
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 1: Second 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & 24467,50 \\
+		\hline
+		Mikael & 1 & Loose aggressive & 3617,50 \\
+		\hline
+		Marius & 1 & Tight passive & -620 \\
+		\hline
+		Jostein & 1 & Tight passive & -2960 \\
+		\hline
+		Emil & 1 & Tight passive & -4580 \\
+		\hline
+		Steinar & 1 & Tight passive & -6972,50 \\
+		\hline
+		Stian & 1 & Tight passive & -5952,50 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Second phase 1 run}
+\end{table}
+% ------ END TABLE 1000-run
+\newpage
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 1: Third 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & 11035 \\
+		\hline
+		Mikael & 1 & Loose aggressive & 16802,50 \\
+		\hline
+		Marius & 1 & Tight passive & -4212,50 \\
+		\hline
+		Jostein & 1 & Tight passive & -5382,50 \\
+		\hline
+		Emil & 1 & Tight passive & -5712,50 \\
+		\hline
+		Steinar & 1 & Tight passive & -4565 \\
+		\hline
+		Stian & 1 & Tight passive & -965 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Third phase 1 run}
+\end{table}
+% ------ END TABLE 1000-run
+
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 1: Fourth 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & 12325 \\
+		\hline
+		Mikael & 1 & Loose aggressive & 24475 \\
+		\hline
+		Marius & 1 & Tight passive & -3322,50 \\
+		\hline
+		Jostein & 1 & Tight passive & -7440 \\
+		\hline
+		Emil & 1 & Tight passive & -7880 \\
+		\hline
+		Steinar & 1 & Tight passive & -5107,50 \\
+		\hline
+		Stian & 1 & Tight passive & -6050 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Fourth phase 1 run}
+\end{table}
+% ------ END TABLE 1000-run
+\newpage
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 1: Fifth 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & 13877,50 \\
+		\hline
+		Mikael & 1 & Loose aggressive & 13172,50 \\
+		\hline
+		Marius & 1 & Tight passive & -4505 \\
+		\hline
+		Jostein & 1 & Tight passive & -2517,50 \\
+		\hline
+		Emil & 1 & Tight passive & -4445 \\
+		\hline
+		Steinar & 1 & Tight passive & -5135 \\
+		\hline
+		Stian & 1 & Tight passive & -3447,50 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Fifth phase 1 run}
+\end{table}
+% ------ END TABLE 1000-run
+
+\subsection{Phase 2}
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 2: First 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & XXX \\
+		\hline
+		Mikael & 1 & Loose aggressive & XXX \\
+		\hline
+		Marius & 1 & Tight passive & XXX \\
+		\hline
+		Jostein & 1 & Tight passive & XXX \\
+		\hline
+		Emil & 1 & Tight passive & XXX \\
+		\hline
+		Steinar & 1 & Tight passive & XXX \\
+		\hline
+		Stian & 1 & Tight passive & XXX \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{First phase 2 run}
+\end{table}
+% ------ END TABLE 1000-run
+
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 2: Second 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & 24467,50 \\
+		\hline
+		Mikael & 1 & Loose aggressive & 3617,50 \\
+		\hline
+		Marius & 1 & Tight passive & -620 \\
+		\hline
+		Jostein & 1 & Tight passive & -2960 \\
+		\hline
+		Emil & 1 & Tight passive & -4580 \\
+		\hline
+		Steinar & 1 & Tight passive & -6972,50 \\
+		\hline
+		Stian & 1 & Tight passive & -5952,50 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Second phase 2 run}
+\end{table}
+% ------ END TABLE 1000-run
+
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 2: Third 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & 11035 \\
+		\hline
+		Mikael & 1 & Loose aggressive & 16802,50 \\
+		\hline
+		Marius & 1 & Tight passive & -4212,50 \\
+		\hline
+		Jostein & 1 & Tight passive & -5382,50 \\
+		\hline
+		Emil & 1 & Tight passive & -5712,50 \\
+		\hline
+		Steinar & 1 & Tight passive & -4565 \\
+		\hline
+		Stian & 1 & Tight passive & -965 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Third phase 2 run}
+\end{table}
+% ------ END TABLE 1000-run
+
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 2: Fourth 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & 12325 \\
+		\hline
+		Mikael & 1 & Loose aggressive & 24475 \\
+		\hline
+		Marius & 1 & Tight passive & -3322,50 \\
+		\hline
+		Jostein & 1 & Tight passive & -7440 \\
+		\hline
+		Emil & 1 & Tight passive & -7880 \\
+		\hline
+		Steinar & 1 & Tight passive & -5107,50 \\
+		\hline
+		Stian & 1 & Tight passive & -6050 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Fourth phase 2 run}
+\end{table}
+% ------ END TABLE 1000-run
+
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 2: Fifth 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Martin & 1 & Loose aggressive & 13877,50 \\
+		\hline
+		Mikael & 1 & Loose aggressive & 13172,50 \\
+		\hline
+		Marius & 1 & Tight passive & -4505 \\
+		\hline
+		Jostein & 1 & Tight passive & -2517,50 \\
+		\hline
+		Emil & 1 & Tight passive & -4445 \\
+		\hline
+		Steinar & 1 & Tight passive & -5135 \\
+		\hline
+		Stian & 1 & Tight passive & -3447,50 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Fifth phase 2 run}
+\end{table}
+% ------ END TABLE 1000-run
+
+\subsection{Phase 3}
+Tables from phase 3 runs
+
+\section{Discussion}
+
+\subsection{Phase 1}
+
+\subsection{Phase 2}
+
+\subsection{Phase 3}
+
+\end{document}
+
