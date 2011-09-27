@@ -19,6 +19,7 @@ class Player():
     self.last_bet = 0
     self.raise_count = 0
     self.play_style = play_style
+    self.last_action = ""
     self.total_fold = 0
     self.total_call = 0
     self.total_check = 0
@@ -149,6 +150,9 @@ class Player():
 
 
   def print_info(self, shared_cards):
+    print(self.name, "- play style: "+self.play_style, "(", self.money, "credits):", cards.card_names(self.cards), cards.calc_cards_power(self.cards + shared_cards))
+  
+  def print_action_info(self, shared_cards):
     print(self.name, "- play style: "+self.play_style, "(", self.money, "credits):", cards.card_names(self.cards), cards.calc_cards_power(self.cards + shared_cards))
     print("Total wins before showdown: ", self.total_pre_showdown_win)
     print("Total wins at showdown: ", self.total_showdown_win)
