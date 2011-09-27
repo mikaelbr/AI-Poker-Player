@@ -96,7 +96,7 @@ class Phase1(player.Player):
     if self.last_action != "":
       self.take_action_super(highest_bet, pot, players, position, shared_cards, state, total_raises, self.last_action)
 
-    print("DEBUG RET FROM AGGRESSIVE ===================== ", ret)
+    #print("DEBUG RET FROM AGGRESSIVE ===================== ", ret)
     return ret
 
   def take_tight_passive_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises):
@@ -173,23 +173,20 @@ class Phase1(player.Player):
 
 # Play styles:
 # "tight_passive"
-# "tight_aggressive"
-# "loose_passive"
 # "loose_aggressive"
-'''
+
 players = [
   Phase1("Mikael", 1000, "loose_aggressive"),
   Phase1("Marius", 1000, "tight_passive"),
   Phase1("Martin", 1000, "loose_agressive"),
-  Phase1("Jostein", 1000, "loose_passive"),
-  Phase1("Emil", 1000, "loose_passive")
-  #Phase1("Steinar", 1000, "loose_passive"),
-  #Phase1("Stian", 1000, "loose_passive"),
+  Phase1("Jostein", 1000, "tight_passive"),
+  Phase1("Emil", 1000, "tight_passive"),
+  Phase1("Steinar", 1000, "tight_passive"),
+  Phase1("Stian", 1000, "tight_passive"),
   #Phase1("Selmer", 1000, "tight_passive"),
   #Phase1("Ole Jorgen", 1000, "tight_passive"),
   #Phase1("Andre the giant", 1000, "tight_aggressive")
 ]
 
 #p = poker.poker(players, 250, debug_mode=False);
-p = poker.poker(players, 1000, debug_mode=True);
-'''
+p = poker.poker(players, 1000, debug_mode=False);
