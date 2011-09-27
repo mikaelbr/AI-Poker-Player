@@ -189,6 +189,9 @@ class poker():
           return [[p], cards.calc_cards_power(p.cards + self.shared_cards)]
     
     if is_last_round:
+
+      count_active = self.count_active_players(self.active_players)
+
       winner = [None, [0, 0, 0, 0, 0]]
       for p in self.active_players:
         if p == None:
@@ -224,6 +227,7 @@ class poker():
       #Check who lost the showdown
       for p in self.active_players:
         if p != None:
+          p.save_modeling(count_active, self.shared_cards)
           if not p in winner[0]:
             # Register loss on the players
             p.showdown_loss()
