@@ -7,7 +7,7 @@ class poker():
   def __init__(self, players, n_rounds = 1, n_games = 1, force_log = False):
     self.n_games = n_games
     self.n_rounds = n_rounds
-    self.show_data = n_games < 2 or force_log
+    self.show_data = force_log
     self.players = players
     self.last_raise = 0
 
@@ -53,9 +53,8 @@ class poker():
         j += 1 
 
       self.log("Pot:", self.pot)
-      self.show_active_player_stats()      
+      #self.show_active_player_stats()      
 
-      
       self.do_betting_round(False)
 
       p = self.calculate_win()
@@ -131,6 +130,7 @@ class poker():
 
   def do_betting_round(self, do_reset_bets = True):
     self.log("------ START BETTING ROUND -------")
+    self.show_table_status()
     self.log("Pot:", self.pot)
 
     if self.calculate_win():
@@ -150,9 +150,9 @@ class poker():
       highest_bet = 0 if self.active_players[-1] == None else self.active_players[-1].last_bet
       if do_reset_bets:
         highest_bet = 0
-      print("Highest bet before take action :", highest_bet)
-      action = p.take_action(highest_bet, self.pot, self.active_players, i, self.shared_cards)
-      print("Highest bet after take action :", highest_bet)
+      self.log("Highest bet before take action :", highest_bet)
+      action = p.take_action(highest_bet, self.pot, self.count_active_players(self.active_players), i, self.shared_cards)
+      self.log("Highest bet after take action :", highest_bet)
 
       # Action returns a list [<0|1>, amount] 0 = Call, 1 = raise
 
@@ -214,9 +214,16 @@ class poker():
   def show_shared_cards(self):
     self.log("Shared cards:", cards.card_names(self.shared_cards))
 
+  def show_table_status(self):
+    print('====== TABLE STATUS ======')
+    print('Pot: '+str(self.pot))
+    print('Shared cards: '+str(self.shared_cards))
+    print('Players left, with credits and hole cards :')
+    self.show_active_player_stats()
+
   def show_active_player_stats(self):
     sum = 0
-    print('\n')
+    #print('\n')
     self.log("------ Active player stats -----")
     for p in self.active_players:
       if p != None:
@@ -228,25 +235,25 @@ class poker():
 
   def show_all_player_stats(self):
     sum = 0
-    nrOfPlayers = 0
-    bestPlayer = None
-    maxMoney = 0
+    nr_of_players = 0
+    best_player = None
+    max_money = 0
     print('\n')
     self.log("------ TOTAL PLAYER STATS ------")
     for p in self.players:
       p.print_info(self.shared_cards)
       sum += p.money
-      nrOfPlayers+=1
-      if (p.money > maxMoney):
-        bestPlayer = p
-        maxMoney = p.money
-    self.log("Number of players : ", nrOfPlayers)
-    self.log("Best player was ", bestPlayer.name, "with", bestPlayer.money, "money")
+      nr_of_players+=1
+      if (p.money > max_money):
+        best_player = p
+        max_money = p.money
+    self.log("Number of players : ", nr_of_players)
+    self.log("Best player was ", best_player.name, "with", best_player.money, "credits")
     self.log("Total sum : ", sum)
     self.log("----- END TOTAL PLAYER STATS ------")
     print('\n')
 
   def log(self, *message, **argv):
     if (self.show_data): 
-      print(*message, sep=" ", end=".\n") # Python 3.0 syntax
+      print(*message, sep=" ", end="\n") # Python 3.0 syntax
       #print message # python 2 syntax
