@@ -3,7 +3,7 @@ import player
 import poker
 
 class Phase1(player.Player):
-  def take_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises):
+  def take_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises, active_players):
     if(self.play_style == "tight_passive"):
       return self.take_tight_passive_action(highest_bet, pot, players, position, shared_cards, state, total_raises)
     elif self.play_style == "loose_passive":

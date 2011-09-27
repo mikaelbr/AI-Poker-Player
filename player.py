@@ -28,6 +28,8 @@ class Player():
     self.total_showdown_loss = 0
     self.total_pre_showdown_win = 0
 
+    self.calculated_opponent_models = {} # only used by phase 3 player
+
 
   def set_cards(self, cards):
     self.cards = cards

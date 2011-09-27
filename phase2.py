@@ -43,7 +43,7 @@ def fetch_rollout_data(players, hole_cards):
 
 
 class Phase2(player.Player):
-  def take_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises):
+  def take_action(self, highest_bet, pot, players, position, shared_cards, state, total_raises, active_players):
     if len(shared_cards) < 1: # pre-flop
       
       # Fetch information from stored data for rollout simulations.
@@ -93,7 +93,7 @@ class Phase2(player.Player):
 # "loose_passive"
 # "loose_aggressive"
 
-
+'''
 players = [
   Phase2("Mikael", 1000, "loose_aggressive"), 
   Phase2("Marius", 1000, "loose_aggressive"),
@@ -108,4 +108,4 @@ players = [
 ]
 
 p = poker.poker(players, 50, debug_mode = True);
-
+'''
