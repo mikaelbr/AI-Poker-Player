@@ -101,28 +101,35 @@
 
 \section{Basic code structure}
 
-\subsection{Phase 1}
-To be filled in..
+Basic structure of the code
 
-\subsection{Phase 2}
-To be filled in..
+The code, written in python, is based on the code given as handouts to the project. All deck and card handling is left to this code. 
 
-\subsection{Phase 3}
-To be filled in..
+The main structure for game rules, player handling and general poker manager a module, «Poker», is used. 
+
+Each player on the game is a subclass of a class «Player». This class handles all the generic player operations. I.e. a action like call, fold or raise uses the same implementation independent of phase. There are three subclasses of «Player»; «Phase1», «Phase2» and «Phase». Each of these subclasses are thin, with essentially only one method implemented - the rest of the methods are generic and inherited from the super class. The base class Player stores all different types of stats, like number of wins/ties/losses before and after showdown, latest action, total money. It also has control over play style, blinds and so on.
+
+The method implemented in each of the ''Phase classes'', take\_action, uses the different strategies and takes advantage of the difference in knowledge. 
+
+For starting a poker game, you can initiate the poker class and add a list of players as first argument. In the player list you can add all of the different phase players, in any combination. 
+
+Other than the poker modules, there is a module for generating a pre flop rollout simulation named ''pre\_flop\_rollout\_sim.py'' and a module for calculating hand strength, ''hand\_strength.py''. These are both used for phase two. 
+
+For knowledge gathering in phase three, a module called ''db\_con.py'' is used. This handles context generating and storing all the different data sets in a sqlite table. This module also has a function (actually method since it’s in a class) for finding estimated hand strength based on context, player and latest action.
 
 \section{Betting decision logic}
 
 \subsection{Phase 1}
-To be filled in..
+Only the hand rankings are used. We implemented two strategies based on what looked plausible for a poker player. We checked for what ranking both the hole cards with or without the shared cards, and implemented a set of rules for what action to take based on the given hand. An example of a rule could be, «If hole cards are pairs and player is loose aggressive, then raise». 
 
 \subsection{Phase 2}
-To be filled in..
+The same logic from phase 1 was implemented, but with the pre flop rollout and hand strength calculations taken into account. In the set of rules used in phase 1, we added the strength and equivalent class calculation to strengthen the strategies. So a rule could be «If in post flop and player is loose aggressive and hand strength is over 0.30, then raise».
 
 \subsection{Phase 3}
-To be filled in..
+Built on top of phase 2 again. The same set of rules and both calculations used. In addition to this we used the opponent modelling to strengthen these rules even more. We only implemented a check for what the estimated highest cards on the table were (by hand strength). So a rule can be «If in post flop and player is loose aggressive and hand strength is over 0.40 and highest opponent estimate is 0.30, then raise»
 
 \section{Opponent models and contexts}
-To be filled in..
+We logged all parts of actions of a player, if he reached showdown. In the context we used state of betting round, number of players active, number of raises in round and pot odds. We also used player name and action as a key.
 
 \section{Multi-hand runs}
 
@@ -491,17 +498,17 @@ To be filled in..
 		\hline
 		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
 		\hline
-		Andre the giant & 1 & Loose aggressive & 5462,50 \\
+		Andre the giant & 1 & Loose aggressive & 6430 \\
 		\hline
-		Marius & 2 & Loose aggressive & 1270 \\
+		Marius & 2 & Loose aggressive & 812,50 \\
 		\hline
-		Jostein & 2 & Tight passive & -1910 \\
+		Jostein & 2 & Tight passive & -1985 \\
 		\hline
-		Steinar & 1 & Tight passive & -920 \\
+		Steinar & 1 & Tight passive & -1025 \\
 		\hline
-		Mikael & 3 & Loose aggressive & 4592,50 \\
+		Mikael & 3 & Loose aggressive & 5537,50 \\
 		\hline
-		Martin & 3 & Tight passive & -1700 \\
+		Martin & 3 & Tight passive & -3770 \\
 		\hline
 		\end{tabular}
 	\end{center}
@@ -509,13 +516,76 @@ To be filled in..
 \end{table}
 % ------ END TABLE 1000-run
 
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 3: Fourth 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Andre the giant & 1 & Loose aggressive & 2980 \\
+		\hline
+		Marius & 2 & Loose aggressive & 7210 \\
+		\hline
+		Jostein & 2 & Tight passive & -2300 \\
+		\hline
+		Steinar & 1 & Tight passive & 2800 \\
+		\hline
+		Mikael & 3 & Loose aggressive & -2045 \\
+		\hline
+		Martin & 3 & Tight passive & -1865 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Fourth phase 3 run}
+\end{table}
+% ------ END TABLE 1000-run
+
+% ------ START TABLE 1000-run
+\begin{center}
+	{ \Large Phase 3: Fifth 1000-hand run } \\
+	All players start with 1000 credits.
+\end{center}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|l|l|l| p{6cm} |}
+		\hline
+		\textbf{Player name} & \textbf{Phase} & \textbf{Style} & \textbf{Final credits} \\
+		\hline
+		Andre the giant & 1 & Loose aggressive & 1675 \\
+		\hline
+		Marius & 2 & Loose aggressive & 4375 \\
+		\hline
+		Jostein & 2 & Tight passive & -3170 \\
+		\hline
+		Steinar & 1 & Tight passive & -1445 \\
+		\hline
+		Mikael & 3 & Loose aggressive & 7840 \\
+		\hline
+		Martin & 3 & Tight passive & -2570 \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{Fifth phase 3 run}
+\end{table}
+% ------ END TABLE 1000-run
+
 \section{Discussion}
 
 \subsection{Phase 1}
+In this phase the players does not care about the opponent's, only their own cards and ranking. We have one tight-passive style, and one loose-aggressive style, and feels that this covers two opposite playing styles in poker. When these two are put up against each other, loose-aggressive will almost always win. We saw in our results that that was certainly the case. When the opponents are not considered, the players with a loose-aggressive attitude will bet much, and so the tight-passives will always fold, and never catch their bluff.
 
 \subsection{Phase 2}
+Again we see that the loose-aggressive style is the best one. We implemented handstrength-consideration in addition to the logic in phase 1, and the player took better choices of when to bet/raise and when to check/call. 
 
 \subsection{Phase 3}
+We had some troubles with getting the phase 3 players to win, so we believe there is a bug in the implementation of opponent-modeling actions.
 
 \end{document}
 
